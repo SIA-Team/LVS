@@ -1,4 +1,4 @@
-CREATE TABLE Activite_Compte(
+  CREATE TABLE Activite_Compte(
 date Integer(20) not null,
 etat Integer(20) not null,
 description Integer(20) not null,
