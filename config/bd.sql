@@ -1,4 +1,4 @@
-  CREATE TABLE Activite_Compte(
+CREATE TABLE Activite_Compte(
 date Integer(20) not null,
 etat Integer(20) not null,
 description Integer(20) not null,
@@ -195,44 +195,56 @@ nom Integer(20) not null,
 )ENGINE=InnoDB;
   
 CREATE TABLE Quantite_Produit(
+id_commande integer(7) not null,
+id_produit integer(7) not null,
 quantite Integer(20) not null,
-  
+constraint pk_quantite_produit primary key (id_commande,id_produit),
+constraint fk_quantite_produit_commande foreign key (id_commande) references Commande(numero),
+constraint fk_quantite_produit_produit foreign key (id_produit) references Produit(numero)
 )ENGINE=InnoDB;
   
 CREATE TABLE Remise(
-nom_remise Integer(20) not null,
-prix_max Integer(20) not null,
-prix_min Integer(20) not null,
-taux Integer(20) not null,
-  
+nom_remise VARCHAR(60) not null PRIMARY KEY,
+prix_max DECIMAL(5,2) not null,
+prix_min DECIMAL(5,2) not null,
+taux DECIMAL(4,2) not null,
 )ENGINE=InnoDB;
-  
+ 
+--A vérifier 
 CREATE TABLE Retour(
-numero Integer(20) not null,
-  
+numcommande Integer(8) not null,
+numero integer(5) not null auto_increment PRIMARY KEY,
+CONSTRAINT FK_RETOUR_COMMANDE FOREIGN KEY (numcommande) REFERENCES Commande(numero)
 )ENGINE=InnoDB;
-  
+
+--A vérifier 
 CREATE TABLE Sous-Commande(
-nom Integer(20) not null,
-prenom Integer(20) not null,
-total Integer(20) not null,
-remise_total Integer(20) not null,
-  
+numcommande integer(5) not null,
+numsouscommande integer(5) not null,
+nom VARCHAR(60) not null,
+prenom VARCHAR(60) not null,
+total DECIMAL(7,2) not null,
+CONSTRAINT PK_SOUSCOMMANDE PRIMARY KEY(numcommande,numsouscommande),
+CONSTRAINT FK_SOUSCOMMANDE FOREIGN KEY(numcommande) REFERENCES COMMANDE(numcommande) 
 )ENGINE=InnoDB;
   
+--A vérifier
 CREATE TABLE Travee(
-numero Integer(20) not null,
-  
+numero Integer(5) not null,
+numcouloir Integer(5) not null,
+numlocal Integer(5) not null,
+CONSTRAINT PK_TRAVEE PRIMARY KEY(numero,numcouloir),
+CONSTRAINT FK_TRAVEE_ETAGERE FOREIGN KEY (numcouloir,numlocal) REFERENCES Couloir(numero,numlocal)
 )ENGINE=InnoDB;
   
+--A vérifier
 CREATE TABLE Type_Colis(
-nom_colis Integer(20) not null,
-poids_supporter Integer(20) not null,
-nombre_boite_possible Integer(20) not null,
-  
+nom_colis VARCHAR(60) not null primary key,
+poids_supporter DECIMAL(5,2) not null,
+nombre_boite_possible Integer(2) not null,
 )ENGINE=InnoDB;
-  
+ 
+--A vérifier
 CREATE TABLE Type_Compte(
-nom Integer(20) not null,
-  
+nom VARCHAR(60) not null PRIMARY KEY,
 )ENGINE=InnoDB;
