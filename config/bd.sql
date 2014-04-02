@@ -317,6 +317,15 @@ CREATE TABLE Quantite_Retour(
 	constraint FK_QTRETOUR_LOTS Foreign key (num_lots) references Lots(numero) 
 )Engine=Innodb;
 
+CREATE TABLE Quantite_Emballer(
+	num_colis integer(7) not null,
+	num_lots integer(8) not null,
+	quantite integer(4) not null,
+	constraint PK_QTEMBALLER PRIMARY KEY (num_colis,num_lots),
+	constraint FK_QTEMBALLER_COLIS Foreign key (num_colis) references Colis(identifiant),
+	constraint FK_QTEMBALLER_LOTS Foreign key (num_lots) references Lots(numero) 
+)Engine=Innodb;
+
 CREATE TABLE Avoir_Cause(
 	numero_retour integer(5),
 	nom_cause varchar(60),
