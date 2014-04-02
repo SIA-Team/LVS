@@ -146,7 +146,7 @@ constraint FK_Etagere foreign key (numtravee,numcouloir,numlocal) References Tra
 )ENGINE=InnoDB;	
 	
 CREATE TABLE Emplacement_Stock(
-numero Integer(20) not null primary key,
+numero Integer(10) not null primary key,
 positionLibre TINYINT(1) not null,
 numetagere integer(5) not null,
 numtravee integer(5) not null,
@@ -161,25 +161,18 @@ Etat VARCHAR(60) not null primary key
 
 CREATE TABLE Historique_Etat(
 idcommande integer(8) not null,
-date Integer(20) not null,
+date DATE not null,
 etat varchar(60) not null,
 constraint PK_HISTOETAT Primary key(idcommande,date,etat),
-constraint FK_HISTOETAT_COMMANDE Foreign key (idcommande) references Commande(numcommande)
-)ENGINE=InnoDB;
-
-CREATE TABLE Lots(
-numero Integer(20) not null primary key,
-date_fabrication Integer(20) not null,
-date_peromption Integer(20) not null,
-emplacement Integer(20) not null,
-constraint FK_LOTS_EMPLACEMENT FOREIGN KEY (emplacement) References Emplacement_Stock(numero)
+constraint FK_HISTOETAT_COMMANDE Foreign key (idcommande) references Commande(numcommande),
+constraint FK_LISTETAT_COMMANDE Foreign key (etat) references Liste_Etat_Commande(etat)
 )ENGINE=InnoDB;
 
 CREATE TABLE Historique_Compte(
 numcompte integer(7) not null, 
-date Integer(20) not null,
-etat Integer(20) not null,
-descriptions Integer(20) not null,
+date TIMESTAMP not null,
+etat VARCHAR(80) not null,
+descriptions VARCHAR(80) not null,
 constraint PK_HISTOCOMPTE Primary key (numcompte,date),
 constraint FK_HISTOCOMPTE foreign key (numcompte) references Compte(numcompte)
 )ENGINE=InnoDB;
@@ -208,16 +201,26 @@ nom_condition Integer(20) not null primary key,
 prestataire VARCHAR(60) not null,
 constraint FK_FORMULE_PRESTATAIRE Foreign key (prestataire) references Prestataire_Logistique (denomination)
 )ENGINE=InnoDB;
-  
+
 CREATE TABLE Produit(
-reference Integer(20) not null primary key,
-nom Integer(20) not null,
-poids Integer(20) not null,
-nombreboite Integer(20) not null,
-stock_reserve Integer(20) not null,
-stock_reel Integer(20) not null,
-description Integer(20) not null,
+reference Integer(10) not null primary key,
+nom VARCHAR(60) not null,
+poids DECIMAL(4,2) not null,
+nombreboite Integer(8) not null,
+stock_reserve Integer(4) not null,
+stock_reel Integer(4) not null,
+description VARCHAR(60) not null,
 num_coffret integer(20)
+)ENGINE=InnoDB;
+
+CREATE TABLE Lots(
+numero Integer(10) not null primary key,
+num_produit integer(10) not null,
+date_fabrication DATE not null,
+date_peromption DATE not null,
+emplacement Integer(20) not null,
+constraint FK_LOTS_PRODUIT FOREIGN KEY (num_produit) References Produit(reference),
+constraint FK_LOTS_EMPLACEMENT FOREIGN KEY (emplacement) References Emplacement_Stock(numero)
 )ENGINE=InnoDB;
 
 -- ok 
