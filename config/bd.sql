@@ -112,13 +112,6 @@ nom_colis VARCHAR(60) not null primary key,
 poids_supporter DECIMAL(5,2) not null,
 nombre_boite_possible Integer(2) not null
 )ENGINE=InnoDB;	
-	
-CREATE TABLE Colis(
-identifiant integer(7) not null primary key,
-date_envoie Integer(20) not null,
-type VARCHAR(60) not null,
-constraint FK_COLIS_TYPE foreign key (type) references Type_Colis(nom_colis)
-)ENGINE=InnoDB;
   
 CREATE TABLE Locaux_de_stock(
 numero Integer(5) not null primary key,
@@ -280,6 +273,16 @@ CONSTRAINT FK_SOUSCOMMANDE_LIVRAISON FOREIGN KEY(num_livraison) REFERENCES Bon_L
 CONSTRAINT FK_SOUSCOMMANDE_PERSONNE FOREIGN KEY(num_destinataire) REFERENCES Personne(identifiant),
 CONSTRAINT PK_SOUSCOMMANDE PRIMARY KEY(numcommande,numsouscommande),
 CONSTRAINT FK_SOUSCOMMANDE FOREIGN KEY(numcommande) REFERENCES COMMANDE(numcommande) 
+)ENGINE=InnoDB;
+
+CREATE TABLE Colis(
+identifiant integer(7) not null primary key,
+date_envoie Integer(20) not null,
+type VARCHAR(60) not null,
+numcommande integer(5) not null,
+numsouscommande integer(5) not null,
+constraint FK_COLIS_SOUSCOMMANDE FOREIGN KEY(numcommande,numsouscommande) references Sous_Commande(numcommande,numsouscommande),
+constraint FK_COLIS_TYPE foreign key (type) references Type_Colis(nom_colis)
 )ENGINE=InnoDB;
   
 -- A vérifier
