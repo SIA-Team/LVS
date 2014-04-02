@@ -3,7 +3,7 @@ CREATE DATABASE DB DEFAULT CHARACTER SET utf8;
 USE DB;
 	
 CREATE TABLE Adresse(
-id_adresse integer(100) auto_increment PRIMARY KEY,
+id_adresse integer(10) auto_increment PRIMARY KEY,
 code_postal VARCHAR(5) not null,
 ville VARCHAR(60) not null,
 rue VARCHAR(100) not null,
@@ -19,27 +19,13 @@ numboutique Integer(4) PRIMARY KEY
 CREATE TABLE Cause(
 nom VARCHAR(60) PRIMARY KEY not null
 )ENGINE=InnoDB;
+
   
-CREATE TABLE Commande(
-numcommande Integer(8) not null primary key,
-total decimal(8,2) not null,
-commentaire VARCHAR(200) not null,
-frais_livraison decimal(8,2) not null,
-total_remise decimal(8,2) not null
-)ENGINE=InnoDB;
-  
--- A vérifier
-CREATE TABLE Type_Colis(
-nom_colis VARCHAR(60) not null primary key,
-poids_supporter DECIMAL(5,2) not null,
-nombre_boite_possible Integer(2) not null
-)ENGINE=InnoDB;	
-	
-CREATE TABLE Colis(
-identifiant integer(7) not null primary key,
-date_envoie Integer(20) not null,
-type VARCHAR(60) not null,
-constraint FK_COLIS_TYPE foreign key (type) references Type_Colis(nom_colis)
+CREATE TABLE Remise(
+nom_remise VARCHAR(60) not null PRIMARY KEY,
+prix_max DECIMAL(5,2) not null,
+prix_min DECIMAL(5,2) not null,
+taux DECIMAL(4,2) not null
 )ENGINE=InnoDB;
   
 CREATE TABLE Document(
@@ -58,10 +44,77 @@ CREATE TABLE Facture(
 numerodocument integer(7) primary key,
 numfacture integer(7) not null,
 CONSTRAINT FK_FACTURE_DOCUMENT FOREIGN KEY (numerodocument) REFERENCES DOCUMENT(numero)
+)ENGINE=InnoDB;	
+
+CREATE TABLE Langue(
+langue VARCHAR(60) not null primary key
+)ENGINE=InnoDB;
+
+-- OK
+CREATE TABLE Moyen_Paiement(
+moyenpaiement VARCHAR(30) not null PRIMARY KEY
+)ENGINE=InnoDB;
+
+-- OK
+CREATE TABLE Personne(
+identifiant Integer(6) not null PRIMARY KEY AUTO_INCREMENT,
+telephone VARCHAR(10) not null,
+emailclient VARCHAR(60) not null,
+etat ENUM ('BLOQUER','EN ATTENTE DE CONFIRMATION', 'ACTIF','FERME') not null default 'EN ATTENTE DE CONFIRMATION',
+envoie_email ENUM('OUI','NON') not null default 'OUI',
+envoie_catalogue ENUM('OUI','NON') not null default 'OUI',
+adresse_facturation Integer(10) not null,
+adresse_livraison Integer(10) not null,
+administrateur integer(7),
+internaute integer(7),
+CONSTRAINT FK_PERSONNE_ADMINISTRATEUR FOREIGN KEY (administrateur) REFERENCES Compte(numcompte),
+CONSTRAINT FK_PERSONNE_INTERNAUTE FOREIGN KEY (internaute) REFERENCES Compte(numcompte),
+CONSTRAINT FK_FACTURATION FOREIGN KEY (adresse_facturation) REFERENCES Adresse(id_adresse),
+CONSTRAINT FK_LIVRAISON FOREIGN KEY (adresse_facturation) REFERENCES Adresse(id_adresse) 
+)ENGINE=InnoDB;
+	
+CREATE TABLE Commande(
+numcommande Integer(8) not null primary key,
+total decimal(8,2) not null,
+commentaire VARCHAR(200) not null,
+frais_livraison decimal(8,2) not null,
+total_remise decimal(8,2) not null,
+nom_remise varchar(60),
+adresse_facturation integer(10),
+adresse_livraison integer(10),
+numero_facture integer(10),
+numero_boutique integer(4) default -1,
+langue varchar(60) not null,
+moyen_paiement varchar(30) not null,
+num_payeur integer(8) not null,
+CONSTRAINT FK_COMMANDE_PERSONNE FOREIGN KEY(num_payeur) REFERENCES Personne(identifiant),
+constraint FK_COMMANDE_MPAIEMENT FOREIGN KEY (moyen_paiement) references Moyen_Paiement(moyenpaiement),
+constraint FK_COMMANDE_LANGUE FOREIGN KEY (langue) references Langue(langue),
+constraint FK_COMMANDE_BOUTIQUE FOREIGN KEY (numero_boutique) references Boutique(numboutique),
+constraint FK_COMMANDE_FACTURE FOREIGN KEY (numero_facture) references Facture(numerodocument),
+constraint FK_COMMANDE_FACTURATION FOREIGN KEY (adresse_facturation) references Adresse(id_adresse),
+constraint FK_COMMANDE_LIVRAISON FOREIGN KEY (adresse_livraison) references Adresse(id_adresse),
+constraint FK_COMMANDE_REMISE FOREIGN KEY (nom_remise) References Remise(nom_remise)
+)ENGINE=InnoDB;
+  
+-- A vérifier
+CREATE TABLE Type_Colis(
+nom_colis VARCHAR(60) not null primary key,
+poids_supporter DECIMAL(5,2) not null,
+nombre_boite_possible Integer(2) not null
+)ENGINE=InnoDB;	
+	
+CREATE TABLE Colis(
+identifiant integer(7) not null primary key,
+date_envoie Integer(20) not null,
+type VARCHAR(60) not null,
+constraint FK_COLIS_TYPE foreign key (type) references Type_Colis(nom_colis)
 )ENGINE=InnoDB;
   
 CREATE TABLE Locaux_de_stock(
-numero Integer(5) not null primary key
+numero Integer(5) not null primary key,
+adresse Integer(10) not null,
+constraint FK_LOCAUX_ADRESSE Foreign key (adresse) references Adresse(id_adresse)
 )ENGINE=InnoDB;
   	
 CREATE TABLE Couloir(
@@ -100,15 +153,6 @@ numlocal integer(5) not null,
 constraint FK_Emplacement_Stock foreign key (numetagere,numtravee,numcouloir, numlocal) references Etagere(numero,numtravee,numcouloir, numlocal)
 )ENGINE=InnoDB;
   
--- OK
-CREATE TABLE Moyen_Paiement(
-moyenpaiement VARCHAR(30) not null PRIMARY KEY
-)ENGINE=InnoDB;
-  
-CREATE TABLE Langue(
-langue VARCHAR(60) not null primary key
-)ENGINE=InnoDB;
-  
 CREATE TABLE Liste_Etat_Commande(
 Etat VARCHAR(60) not null primary key
 )ENGINE=InnoDB;
@@ -129,19 +173,7 @@ emplacement Integer(20) not null,
 constraint FK_LOTS_EMPLACEMENT FOREIGN KEY (emplacement) References Emplacement_Stock(numero)
 )ENGINE=InnoDB;
   
--- OK
-CREATE TABLE Personne(
-identifiant Integer(6) not null PRIMARY KEY AUTO_INCREMENT,
-telephone VARCHAR(10) not null,
-emailclient VARCHAR(60) not null,
-etat ENUM ('BLOQUER','EN ATTENTE DE CONFIRMATION', 'ACTIF','FERME') not null default 'EN ATTENTE DE CONFIRMATION',
-envoie_email ENUM('OUI','NON') not null default 'OUI',
-envoie_catalogue ENUM('OUI','NON') not null default 'OUI',
-adresse_facturation Integer(10) not null,
-adresse_livraison Integer(10) not null,
-CONSTRAINT FK_FACTURATION FOREIGN KEY (adresse_facturation) REFERENCES Adresse(id_adresse),
-CONSTRAINT FK_LIVRAISON FOREIGN KEY (adresse_facturation) REFERENCES Adresse(id_adresse) 
-)ENGINE=InnoDB;
+
 
   
 CREATE TABLE Compte(
@@ -229,13 +261,6 @@ constraint pk_quantite_produit primary key (id_commande,id_produit),
 constraint fk_quantite_produit_commande foreign key (id_commande) references Commande(numcommande),
 constraint fk_quantite_produit_produit foreign key (id_produit) references Produit(reference)
 )ENGINE=InnoDB;
-  
-CREATE TABLE Remise(
-nom_remise VARCHAR(60) not null PRIMARY KEY,
-prix_max DECIMAL(5,2) not null,
-prix_min DECIMAL(5,2) not null,
-taux DECIMAL(4,2) not null
-)ENGINE=InnoDB;
  
 -- A vérifier 
 CREATE TABLE Retour(
@@ -251,6 +276,8 @@ numsouscommande integer(5) not null,
 nom VARCHAR(60) not null,
 prenom VARCHAR(60) not null,
 total DECIMAL(7,2) not null,
+num_destinataire integer(8),
+CONSTRAINT FK_SOUSCOMMANDE_PERSONNE FOREIGN KEY(num_destinataire) REFERENCES Personne(identifiant),
 CONSTRAINT PK_SOUSCOMMANDE PRIMARY KEY(numcommande,numsouscommande),
 CONSTRAINT FK_SOUSCOMMANDE FOREIGN KEY(numcommande) REFERENCES COMMANDE(numcommande) 
 )ENGINE=InnoDB;
@@ -275,3 +302,20 @@ CREATE TABLE Se_poser(
 	constraint FK_SEPOSER_LOTS Foreign key (numlots) References Lots(numero),
 	constraint FK_SEPOSER_EMPLACEMENT Foreign key (numemplacement) References Emplacement_Stock(numero)
 )Engine=Innodb;
+
+CREATE TABLE Quantite_Retour(
+	num_retour integer(8) not null,
+	num_lots integer(8) not null,
+	quantite integer(4) not null,
+	constraint PK_QTRETOUR PRIMARY KEY (num_retour,num_lots),
+	constraint FK_QTRETOUR_RETOUR Foreign key (num_retour) references Retour(numero),
+	constraint FK_QTRETOUR_LOTS Foreign key (num_lots) references Lots(numero) 
+)Engine=Innodb;
+
+CREATE TABLE Avoir_Cause(
+	numero_retour integer(5),
+	nom_cause varchar(60),
+	constraint PK_AVOIR_CAUSE PRIMARY KEY(numero_retour,nom_cause),
+	constraint FK_ACAUSE_RETOUR FOREIGN KEY (numero_retour) references Retour(numero),
+	constraint FK_ACAUSE_CAUSE FOREIGN KEY (nom_cause) references Cause(nom)
+)
