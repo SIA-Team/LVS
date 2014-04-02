@@ -216,8 +216,8 @@ poids Integer(20) not null,
 nombreboite Integer(20) not null,
 stock_reserve Integer(20) not null,
 stock_reel Integer(20) not null,
-description Integer(20) not null
-  
+description Integer(20) not null,
+num_coffret integer(20)
 )ENGINE=InnoDB;
 
 -- ok 
@@ -225,6 +225,8 @@ CREATE TABLE Coffret(
 reference Integer(10) PRIMARY KEY,
 CONSTRAINT FK_COFFRET_PRODUIT FOREIGN KEY (reference) REFERENCES Produit(reference)
 )ENGINE=InnoDB;
+
+ALTER TABLE Produit ADD constraint FK_PRODUIT_COFFRET Foreign key (num_coffret) references Coffret (reference);
 
 CREATE TABLE Prix(
 reference Integer(10) not null,
