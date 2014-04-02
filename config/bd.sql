@@ -55,6 +55,13 @@ CREATE TABLE Moyen_Paiement(
 moyenpaiement VARCHAR(30) not null PRIMARY KEY
 )ENGINE=InnoDB;
 
+CREATE TABLE Compte(
+numcompte integer(7) not null primary key,
+motpasse VARCHAR(40) not null,
+etat VARCHAR(20) not null,
+id_personne integer(6) not null
+)ENGINE=InnoDB;
+
 -- OK
 CREATE TABLE Personne(
 identifiant Integer(6) not null PRIMARY KEY AUTO_INCREMENT,
@@ -72,6 +79,8 @@ CONSTRAINT FK_PERSONNE_INTERNAUTE FOREIGN KEY (internaute) REFERENCES Compte(num
 CONSTRAINT FK_FACTURATION FOREIGN KEY (adresse_facturation) REFERENCES Adresse(id_adresse),
 CONSTRAINT FK_LIVRAISON FOREIGN KEY (adresse_facturation) REFERENCES Adresse(id_adresse) 
 )ENGINE=InnoDB;
+
+ALTER TABLE Compte ADD constraint fk_COMPTE_PERSONNE foreign key (id_personne) references Personne(identifiant);
 	
 CREATE TABLE Commande(
 numcommande Integer(8) not null primary key,
@@ -172,17 +181,6 @@ date_peromption Integer(20) not null,
 emplacement Integer(20) not null,
 constraint FK_LOTS_EMPLACEMENT FOREIGN KEY (emplacement) References Emplacement_Stock(numero)
 )ENGINE=InnoDB;
-  
-
-
-  
-CREATE TABLE Compte(
-numcompte integer(7) not null primary key,
-motpasse VARCHAR(40) not null,
-etat VARCHAR(20) not null,
-id_personne integer(6) not null,
-constraint fk_COMPTE_PERSONNE foreign key (id_personne) references Personne(identifiant)
-)ENGINE=InnoDB;
 
 CREATE TABLE Historique_Compte(
 numcompte integer(7) not null, 
@@ -277,6 +275,8 @@ nom VARCHAR(60) not null,
 prenom VARCHAR(60) not null,
 total DECIMAL(7,2) not null,
 num_destinataire integer(8),
+num_livraison integer(7),
+CONSTRAINT FK_SOUSCOMMANDE_LIVRAISON FOREIGN KEY(num_livraison) REFERENCES Bon_Livraison(numerodocument),
 CONSTRAINT FK_SOUSCOMMANDE_PERSONNE FOREIGN KEY(num_destinataire) REFERENCES Personne(identifiant),
 CONSTRAINT PK_SOUSCOMMANDE PRIMARY KEY(numcommande,numsouscommande),
 CONSTRAINT FK_SOUSCOMMANDE FOREIGN KEY(numcommande) REFERENCES COMMANDE(numcommande) 
