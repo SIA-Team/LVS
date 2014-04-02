@@ -161,7 +161,7 @@ Etat VARCHAR(60) not null primary key
 
 CREATE TABLE Historique_Etat(
 idcommande integer(8) not null,
-date DATE not null,
+date TIMESTAMP not null,
 etat varchar(60) not null,
 constraint PK_HISTOETAT Primary key(idcommande,date,etat),
 constraint FK_HISTOETAT_COMMANDE Foreign key (idcommande) references Commande(numcommande),
@@ -282,7 +282,7 @@ CONSTRAINT FK_SOUSCOMMANDE FOREIGN KEY(numcommande) REFERENCES COMMANDE(numcomma
 
 CREATE TABLE Colis(
 identifiant integer(7) not null primary key,
-date_envoie Integer(20) not null,
+date_envoie DATE not null,
 type VARCHAR(60) not null,
 numcommande integer(5) not null,
 numsouscommande integer(5) not null,
