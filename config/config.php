@@ -1,5 +1,5 @@
 <?php
 
-//Pour se connecter à la base de données
-$user='root';
-$motpasse='';
+//Pour se connecter ï¿½ la base de donnï¿½es
+define('USER_BD','ROOT');
+define('PASS_BD','');
