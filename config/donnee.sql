@@ -42,3 +42,6 @@ INSERT INTO Liste_Etat_Commande VALUES("PREPARER");
 INSERT INTO Liste_Etat_Commande VALUES("LIVRER");
 INSERT INTO Liste_Etat_Commande VALUES("RETOURNER");
 INSERT INTO Liste_Etat_Commande VALUES("ARCHIVER");
+
+;Insertion des prestataires de logistiques 
+INSERT INTO Prestataire_Logistique(denomination,nomcontact,telephone,mail,poids_min,poids_max) VALUES("COLLISSIMO","DUPOND","0122232425","dupond@collissimo.fr",0,20);
