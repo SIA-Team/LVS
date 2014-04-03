@@ -12,7 +12,8 @@ pays VARCHAR(60) not null
 
 -- OK
 CREATE TABLE Boutique(
-numboutique Integer(4) PRIMARY KEY
+numboutique Integer(4) PRIMARY KEY,
+adresse integer(10)
 )ENGINE=InnoDB;
   
 -- OK
@@ -336,3 +337,5 @@ CREATE TABLE Avoir_Cause(
 	constraint FK_ACAUSE_RETOUR FOREIGN KEY (numero_retour) references Retour(numero),
 	constraint FK_ACAUSE_CAUSE FOREIGN KEY (nom_cause) references Cause(nom)
 )
+
+ALTER TABLE Boutique ADD CONSTRAINT FK_BOUTIQUE_ADRESSE FOREIGN KEY (adresse) REFERENCES Adresse(id_adresse);
