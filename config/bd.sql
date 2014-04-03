@@ -24,8 +24,8 @@ nom VARCHAR(60) PRIMARY KEY not null
   
 CREATE TABLE Remise(
 nom_remise VARCHAR(60) not null PRIMARY KEY,
-prix_max DECIMAL(5,2) not null,
-prix_min DECIMAL(5,2) not null,
+prix_max DECIMAL(6,2) not null,
+prix_min DECIMAL(6,2) not null,
 taux DECIMAL(4,2) not null
 )ENGINE=InnoDB;
   
