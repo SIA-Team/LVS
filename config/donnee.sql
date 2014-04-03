@@ -29,3 +29,16 @@ INSERT INTO Langue("ESPAGNOL");
 INSERT INTO Moyen_Paiement VALUES("ESPECES");
 INSERT INTO Moyen_Paiement VALUES("CB");
 INSERT INTO Moyen_Paiement VALUES("CHEQUES");
+
+;Insertion des etats de commande
+INSERT INTO Liste_Etat_Commande VALUES("PASSER");
+INSERT INTO Liste_Etat_Commande VALUES("EN ATTENTE PAIEMENT");
+INSERT INTO Liste_Etat_Commande VALUES("PAYER");
+INSERT INTO Liste_Etat_Commande VALUES("ANNULER");
+INSERT INTO Liste_Etat_Commande VALUES("BLOQUER");
+INSERT INTO Liste_Etat_Commande VALUES("EN COURS");
+INSERT INTO Liste_Etat_Commande VALUES("EN ATTENTE REAPPROVISIONNEMENT");
+INSERT INTO Liste_Etat_Commande VALUES("PREPARER");
+INSERT INTO Liste_Etat_Commande VALUES("LIVRER");
+INSERT INTO Liste_Etat_Commande VALUES("RETOURNER");
+INSERT INTO Liste_Etat_Commande VALUES("ARCHIVER");
