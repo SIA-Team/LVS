@@ -24,3 +24,8 @@ INSERT INTO Langue("FRANCAIS");
 INSERT INTO Langue("ALLEMAND");
 INSERT INTO Langue("ANGLAIS");
 INSERT INTO Langue("ESPAGNOL");
+
+;Insertion des moyens de paiement
+INSERT INTO Moyen_Paiement VALUES("Espèces");
+INSERT INTO Moyen_Paiement VALUES("CB");
+INSERT INTO Moyen_Paiement VALUES("Chèques");
