@@ -18,3 +18,9 @@ INSERT INTO Cause(nom) VALUES ("erreur de livraison");
 INSERT INTO Remise(nom_remise,prix_max,prix_min,taux) VALUES ("Remise3%",229,381,3);
 INSERT INTO Remise(nom_remise,prix_max,prix_min,taux) VALUES ("Remise5%",381,1220,5);
 INSERT INTO Remise(nom_remise,prix_max,prix_min,taux) VALUES ("Remise5%",1220,9999.99,7);
+
+;Insertion des langues
+INSERT INTO Langue("FRANCAIS");
+INSERT INTO Langue("ALLEMAND");
+INSERT INTO Langue("ANGLAIS");
+INSERT INTO Langue("ESPAGNOL");
